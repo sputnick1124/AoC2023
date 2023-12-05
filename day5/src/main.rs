@@ -27,21 +27,13 @@ impl MapRange {
 }
 
 struct Map {
-    from: String,
-    to: String,
     ranges: Vec<MapRange>,
 }
 
 impl Map {
     fn from_str(input: &str) -> Self {
-        let (line, rest) = input.split_once("\n").unwrap();
-        let (from, to) = line
-            .strip_suffix(" map:")
-            .and_then(|s| s.split_once("-to-"))
-            .expect("not a valid map");
+        let (_, rest) = input.split_once("\n").unwrap();
         Self {
-            from: from.to_owned(),
-            to: to.to_owned(),
             ranges: rest.lines().map(MapRange::from_str).collect(),
         }
     }
@@ -72,9 +64,7 @@ impl Almanac {
     }
 
     fn map_seed(&self, seed: usize) -> usize {
-        self.maps
-            .iter()
-            .fold(seed, |acc, m| m.map(acc))
+        self.maps.iter().fold(seed, |acc, m| m.map(acc))
     }
 }
 
@@ -88,8 +78,14 @@ fn part1(input_str: &str) -> usize {
         .unwrap()
 }
 
-fn part2(input_str: &str) -> u32 {
-    unimplemented!()
+fn part2(input_str: &str) -> usize {
+    let almanac = Almanac::from_str(input_str);
+    almanac
+        .seeds
+        .chunks(2)
+        .flat_map(|sl| (sl[0]..sl[0] + sl[1]).map(|seed| almanac.map_seed(seed)))
+        .min()
+        .unwrap()
 }
 
 fn main() {
@@ -102,9 +98,7 @@ fn main() {
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_part1_sample() {
-        let input_str = r"seeds: 79 14 55 13
+    static INPUT_STR: &str = r"seeds: 79 14 55 13
 
 seed-to-soil map:
 50 98 2
@@ -137,12 +131,14 @@ temperature-to-humidity map:
 humidity-to-location map:
 60 56 37
 56 93 4";
-        assert_eq!(part1(&input_str), 35);
+
+    #[test]
+    fn test_part1_sample() {
+        assert_eq!(part1(&INPUT_STR), 35);
     }
 
     #[test]
     fn test_part2_sample() {
-        let input_str = r"";
-        assert_eq!(part2(&input_str), 0);
+        assert_eq!(part2(&INPUT_STR), 46);
     }
 }
