@@ -32,17 +32,27 @@ impl Schematic {
             .collect()
     }
 
-    fn is_part_number(&self, num: Number) -> bool {
-        [num.row.checked_sub(1), Some(num.row + 1)]
-            .iter()
-            .filter_map(|&x| x)
-            .flat_map(|i| (num.start.saturating_sub(1)..=num.end + 1).map(move |j| (i, j)))
+    fn get_neighbors(&self, num: Number) -> impl Iterator<Item=(usize, usize)> {
+        iter::once(num.row.checked_sub(1)).chain(iter::once(Some(num.row + 1)))
+            .filter_map(|x| x)
+            .flat_map(move |i| (num.start.saturating_sub(1)..=num.end + 1).map(move |j| (i, j)))
             .chain(
                 iter::once(num.start.checked_sub(1).map(|s| (num.row, s)))
                 .chain(iter::once(Some((num.row, num.end+1))))
                 .filter_map(|x| x)
             )
+    }
+
+    fn is_part_number(&self, num: Number) -> bool {
+        self.get_neighbors(num)
             .any(|ij| self.symbols.contains_key(&ij))
+    }
+
+    fn gear_ratios(&self) -> Vec<u32> {
+        self.part_numbers()
+            .into_iter()
+            .map(|n| n.val)
+            .collect()
     }
 
     fn from_str(input: &str) -> Self {
@@ -84,7 +94,8 @@ fn part1(input_str: &str) -> u32 {
 }
 
 fn part2(input_str: &str) -> u32 {
-    unimplemented!()
+    let schematic = Schematic::from_str(input_str);
+    schematic.gear_ratios().iter().sum()
 }
 
 fn main() {
@@ -114,7 +125,16 @@ mod tests {
 
     #[test]
     fn test_part2_sample() {
-        let input_str = r"";
-        assert_eq!(part2(&input_str), 0);
+        let input_str = r"467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..";
+        assert_eq!(part2(&input_str), 467835);
     }
 }
