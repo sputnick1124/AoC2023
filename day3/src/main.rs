@@ -1,6 +1,6 @@
 use regex::Regex;
-use std::iter;
 use std::collections::HashMap;
+use std::iter;
 
 #[macro_use]
 extern crate lazy_static;
@@ -32,14 +32,15 @@ impl Schematic {
             .collect()
     }
 
-    fn get_neighbors(&self, num: Number) -> impl Iterator<Item=(usize, usize)> {
-        iter::once(num.row.checked_sub(1)).chain(iter::once(Some(num.row + 1)))
+    fn get_neighbors(&self, num: Number) -> impl Iterator<Item = (usize, usize)> {
+        iter::once(num.row.checked_sub(1))
+            .chain(iter::once(Some(num.row + 1)))
             .filter_map(|x| x)
             .flat_map(move |i| (num.start.saturating_sub(1)..=num.end + 1).map(move |j| (i, j)))
             .chain(
                 iter::once(num.start.checked_sub(1).map(|s| (num.row, s)))
-                .chain(iter::once(Some((num.row, num.end+1))))
-                .filter_map(|x| x)
+                    .chain(iter::once(Some((num.row, num.end + 1))))
+                    .filter_map(|x| x),
             )
     }
 
@@ -49,9 +50,23 @@ impl Schematic {
     }
 
     fn gear_ratios(&self) -> Vec<u32> {
-        self.part_numbers()
+        self
+            .part_numbers()
             .into_iter()
-            .map(|n| n.val)
+            .flat_map(|n| {
+                self.get_neighbors(n).filter_map(move |i| {
+                    self.symbols
+                        .get(&i)
+                        .and_then(|&c| if c == '*' { Some((i, n.val)) } else { None })
+                })
+            })
+            .fold(HashMap::new(), |mut acc, ((i, j), n)| {
+                acc.entry((i, j)).or_insert(vec![]).push(n);
+                acc
+            })
+            .into_values()
+            .filter(|v| v.len() == 2)
+            .map(|v| v.into_iter().fold(1, |acc, x| acc * x))
             .collect()
     }
 
