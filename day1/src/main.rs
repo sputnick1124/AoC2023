@@ -1,4 +1,4 @@
-fn day1(input: &str) -> u32 {
+fn part1(input: &str) -> u32 {
     input
         .lines()
         .map(|l| l.chars().filter(|c| c.is_digit(10)))
@@ -42,7 +42,7 @@ fn extract_num(word: &str) -> Vec<u32> {
         .collect()
 }
 
-fn day2(input: &str) -> u32 {
+fn part2(input: &str) -> u32 {
     input
         .lines()
         .inspect(|w| println!("{:?}", w))
@@ -64,8 +64,8 @@ fn day2(input: &str) -> u32 {
 
 fn main() {
     let input_str = std::fs::read_to_string("input.txt").expect("Unable to read file");
-    println!("Day 1: {}", day1(&input_str));
-    println!("Day 2: {}", day2(&input_str));
+    println!("Part 1: {}", part1(&input_str));
+    println!("Part 2: {}", part2(&input_str));
 }
 
 #[cfg(test)]
@@ -73,16 +73,16 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day1() {
+    fn test_part1() {
         let input_str = r#"1abc2
 pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet"#;
-        assert_eq!(day1(input_str), 142);
+        assert_eq!(part1(input_str), 142);
     }
 
     #[test]
-    fn test_day2() {
+    fn test_part2() {
         let input_str = r#"two1nine
 eightwothree
 abcone2threexyz
@@ -91,7 +91,7 @@ xtwone3four
 zoneight234
 7pqrstsixteen
 "#;
-        assert_eq!(day2(input_str), 281);
+        assert_eq!(part2(input_str), 281);
     }
 
     #[test]

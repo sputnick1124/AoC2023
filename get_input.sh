@@ -16,18 +16,18 @@ $THISDIR/get_problem.sh $DAY $YEAR
 
 if ! test -f src/main.rs; then
 cat > src/main.rs << EOF
-fn day1(input_str: &str) -> u32 {
+fn part1(input_str: &str) -> u32 {
     unimplemented!()
 }
 
-fn day2(input_str: &str) -> u32 {
+fn part2(input_str: &str) -> u32 {
     unimplemented!()
 }
 
 fn main() {
     let input_str = std::fs::read_to_string("$OUTPUT_FILE.txt").expect("Unable to read file");
-    println!("Day 1: {}", day1(&input_str));
-    println!("Day 2: {}", day2(&input_str));
+    println!("Part 1: {}", part1(&input_str));
+    println!("Part 2: {}", part2(&input_str));
 }
 
 #[cfg(test)]
@@ -35,15 +35,15 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_day1_sample() {
+    fn test_part1_sample() {
         let input_str = r"";
-        assert_eq!(day1(&input_str), 0);
+        assert_eq!(part1(&input_str), 0);
     }
 
     #[test]
-    fn test_day2_sample() {
+    fn test_part2_sample() {
         let input_str = r"";
-        assert_eq!(day2(&input_str), 0);
+        assert_eq!(part2(&input_str), 0);
     }
 }
 EOF
