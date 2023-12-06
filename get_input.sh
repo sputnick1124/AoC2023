@@ -11,7 +11,7 @@ OUTPUT_FILE=${3:-input}
 echo "$COOKIE"
 
 THISDIR=$(dirname $0)
-curl --cookie "session=$COOKIE" https://adventofcode.com/$YEAR/day/$DAY/input > $OUTPUT_FILE.txt
+curl --ssl-no-revoke --cookie "session=$COOKIE" https://adventofcode.com/$YEAR/day/$DAY/input > $OUTPUT_FILE.txt
 $THISDIR/get_problem.sh $DAY $YEAR
 
 if ! test -f src/main.rs; then

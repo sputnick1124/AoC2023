@@ -4,4 +4,4 @@ source ${SOURCE_DIR}/cookie.sh
 
 DAY=$1
 YEAR=${2:-2023}
-curl -q --cookie "session=$COOKIE" https://adventofcode.com/$YEAR/day/$DAY > problem.md
+curl -q --ssl-no-revoke --cookie "session=$COOKIE" https://adventofcode.com/$YEAR/day/$DAY > problem.md
