@@ -1,25 +1,39 @@
-fn parse(input: &str) -> Vec<(u32, u32)> {
+fn parse_part1(input: &str) -> Vec<(u128, u128)> {
     let (time, dist) = input.split_once('\n').unwrap();
     parse_vec(time).zip(parse_vec(dist)).collect()
 }
 
-fn parse_vec<'s>(line: &'s str) -> impl Iterator<Item=u32> + 's
+fn parse_vec<'s>(line: &'s str) -> impl Iterator<Item=u128> + 's
 {
     line.split_whitespace()
         .skip(1)
         .filter_map(|s| s.parse().ok())
 }
 
-fn wins((time, dist): (u32, u32)) -> u32 {
-    (1..time).map(|t| t * (time - t)).filter(|&d| d > dist).count() as u32
+fn parse_part2(input: &str) -> (u128, u128) {
+    let (time, dist) = input.split_once('\n').unwrap();
+    (parse(time), parse(dist))
 }
 
-fn part1(input_str: &str) -> u32 {
-    parse(input_str).into_iter().map(wins).fold(1, |acc, x| acc * x)
+fn parse(line: & str) -> u128
+{
+    line.split_whitespace()
+        .skip(1)
+        .fold(String::new(), |mut acc, s| { acc.push_str(s); acc })
+        .parse()
+        .expect("bad number")
 }
 
-fn part2(input_str: &str) -> u32 {
-    unimplemented!()
+fn wins((time, dist): (u128, u128)) -> u128 {
+    (1..time).map(|t| t * (time - t)).filter(|&d| d > dist).count() as u128
+}
+
+fn part1(input_str: &str) -> u128 {
+    parse_part1(input_str).into_iter().map(wins).fold(1, |acc, x| acc * x)
+}
+
+fn part2(input_str: &str) -> u128 {
+    wins(parse_part2(input_str))
 }
 
 fn main() {
@@ -41,7 +55,8 @@ Distance:  9  40  200";
 
     #[test]
     fn test_part2_sample() {
-        let input_str = r"";
-        assert_eq!(part2(&input_str), 0);
+        let input_str = r"Time:      71530
+    Distance:  940200";
+        assert_eq!(part2(&input_str), 71503);
     }
 }
