@@ -1,5 +1,6 @@
 #[derive(PartialOrd, Ord, PartialEq, Eq, Clone, Copy)]
 enum Card {
+    Joker = 1,
     Two = 2,
     Three = 3,
     Four = 4,
@@ -34,6 +35,13 @@ impl Card {
             _ => panic!("unexpected card: {}", c),
         }
     }
+
+    fn from_char_with_joker(c: char) -> Self {
+        match Self::from_char(c) {
+            Self::Jack => Self::Joker,
+            card => card,
+        }
+    }
 }
 
 #[derive(PartialOrd, Ord, PartialEq, Eq)]
@@ -51,11 +59,48 @@ impl HandType {
     fn from_str(input: &str) -> Self {
         Hand::from_str(input).hand_type()
     }
+
+    fn from_str_with_joker(input: &str) -> Self {
+        Hand::from_str_with_jokers(input).hand_type().promote()
+    }
+
+    fn promote(self) -> Self {
+        let hand_copy = match &self {
+            Self::High(hand)
+                | Self::Pair(hand)
+                | Self::TwoPair(hand)
+                | Self::Three(hand)
+                | Self::FullHouse(hand)
+                | Self::Four(hand)
+                | Self::Five(hand) => hand.clone()
+        };
+        match &hand_copy.jokers {
+            0 => self,
+            1 => match &self {
+                Self::High(_) => Self::Pair(hand_copy),
+                Self::Pair(_) => Self::Three(hand_copy),
+                Self::TwoPair(_) => Self::FullHouse(hand_copy),
+                Self::Three(_) => Self::Four(hand_copy),
+                _ => Self::Five(hand_copy),
+            }
+            2 => match &self {
+                Self::Pair(_) => Self::Three(hand_copy),
+                Self::TwoPair(_) => Self::Four(hand_copy),
+                _ => Self::Five(hand_copy),
+            }
+            3 => match &self {
+                Self::Three(_) => Self::Four(hand_copy),
+                _ => Self::Five(hand_copy),
+            }
+            _ => Self::Five(hand_copy),
+        }
+    }
 }
 
 #[derive(Eq, PartialEq, Ord, PartialOrd, Clone)]
 struct Hand {
     cards: (Card, Card, Card, Card, Card),
+    jokers: usize,
 }
 
 impl Hand {
@@ -68,7 +113,21 @@ impl Hand {
                 v.pop().unwrap(),
                 v.pop().unwrap(),
                 v.pop().unwrap(),
-            ),
+            ), jokers: 0
+        }
+    }
+
+    fn from_str_with_jokers(input: &str) -> Self {
+        let mut v: Vec<Card> = input.chars().rev().map(Card::from_char_with_joker).collect();
+        let jokers = v.iter().filter(|&c| *c == Card::Joker).count();
+        Self {
+            cards: (
+                v.pop().unwrap(),
+                v.pop().unwrap(),
+                v.pop().unwrap(),
+                v.pop().unwrap(),
+                v.pop().unwrap(),
+            ), jokers
         }
     }
 
@@ -104,14 +163,24 @@ fn parse_part1(line: &str) -> (HandType, u32) {
     (hand, bid)
 }
 
+fn parse_part2(line: &str) -> (HandType, u32) {
+    let (left, right) = line.split_once(" ").expect("bad line");
+    let hand = HandType::from_str_with_joker(left);
+    let bid = right.parse().expect("not a number");
+    (hand, bid)
+}
+
 fn part1(input_str: &str) -> u32 {
     let mut hands = input_str.lines().map(parse_part1).collect::<Vec<_>>();
     hands.sort();
     hands.iter().map(|(_, b)| b).enumerate().fold(0, |acc, (i, b)| acc +(i as u32+1)*b)
 }
 
+
 fn part2(input_str: &str) -> u32 {
-    unimplemented!()
+    let mut hands = input_str.lines().map(parse_part2).collect::<Vec<_>>();
+    hands.sort();
+    hands.iter().map(|(_, b)| b).enumerate().fold(0, |acc, (i, b)| acc +(i as u32+1)*b)
 }
 
 fn main() {
@@ -136,7 +205,11 @@ QQQJA 483";
 
     #[test]
     fn test_part2_sample() {
-        let input_str = r"";
-        assert_eq!(part2(&input_str), 0);
+        let input_str = r"32T3K 765
+T55J5 684
+KK677 28
+KTJJT 220
+QQQJA 483";
+        assert_eq!(part2(&input_str), 5905);
     }
 }
