@@ -24,7 +24,7 @@ fn extract_num(word: &str) -> Vec<u32> {
     let nums = [
         "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
     ];
-    println!("{}", word);
+    // println!("{}", word);
     let mut word_nums: Vec<(usize, usize)> = nums
         .iter()
         .enumerate()
@@ -45,12 +45,12 @@ fn extract_num(word: &str) -> Vec<u32> {
 fn part2(input: &str) -> u32 {
     input
         .lines()
-        .inspect(|w| println!("{:?}", w))
+        // .inspect(|w| println!("{:?}", w))
         .map(|l| {
             l.split_inclusive(char::is_numeric)
                 .flat_map(|w| extract_num(w))
         })
-        .inspect(|x| println!("{:?}", x))
+        // .inspect(|x| println!("{:?}", x))
         .map(|mut nums| {
             let a = nums.by_ref().take(1).next().unwrap();
             if let Some(b) = nums.last() {
