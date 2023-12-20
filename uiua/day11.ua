@@ -15,13 +15,15 @@ P ← =@#⊜∘≠@\n.
 Z ← =∩⧻⊃∘(▽=0.)
 
 S ← (
-  ⊃≡Z⍜⍉≡Z.
-  ⊟∩(\+)
-  ⍉⊚⊙×:
-  ⍉≡(+⊏,:)
-  ⊠(/+⌵-).
-  /+♭×⊠>.⇡⧻.
-  :
+  ⊃≡Z⍜⍉≡Z. # get empty rows/cols
+  ⊟∩(\+)   # accumulate index offsets
+  ⊙×:      # add multiplier
+  ⍉⊚       # get naive indices of galaxies
+  ⍉≡(+⊏,:) # add offsets per index
+  ⊠(/+⌵-). # calculate manhattan distance
+  ⊠>.⇡⧻.   # upper traingular matrix
+  /+♭×     # mask out wanted values
+  :        # swap for string interp
   &p $ "Part _: _"
 )
 
