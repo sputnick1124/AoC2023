@@ -1,6 +1,6 @@
 I ← &fras "input.txt"
 
-Parse  ← ⊜(⊜⋕≠@ .)⊸≠@\n
+Parse  ← ⊜(⊜⋕⊸≠@ )⊸≠@\n
 PartI  ← /+≡(⌵/-)⍜⍉≡⍆Parse
 PartII ← /+×⊙/+⍜⍉(⟜⊞⌕°⊟)Parse
 
