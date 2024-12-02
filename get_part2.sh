@@ -5,5 +5,5 @@ fi
 COOKIE="$(pass ${PASSDIR}nick/aoc/cookie)"
 
 DAY=$1
-YEAR=${2:-2023}
+YEAR=${2:-2024}
 curl -q --ssl-no-revoke --cookie "session=$COOKIE" https://adventofcode.com/$YEAR/day/$DAY > problem.md
