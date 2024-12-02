@@ -1,7 +1,8 @@
+use std::ops::Range;
+
 struct MapRange {
-    dest_start: usize,
-    src_start: usize,
-    len: usize,
+    dest: Range<usize>,
+    src: Range<usize>,
 }
 
 impl MapRange {
@@ -11,17 +12,32 @@ impl MapRange {
             .map(|x| x.parse().expect("not a number"))
             .collect::<Vec<_>>();
         Self {
-            dest_start: nums[0],
-            src_start: nums[1],
-            len: nums[2],
+            dest: nums[0]..nums[0] + nums[2],
+            src: nums[1]..nums[1] + nums[2],
         }
     }
 
     fn map(&self, item: usize) -> Option<usize> {
-        if item.clamp(self.src_start, self.src_start + self.len) == item {
-            Some(self.dest_start + (item - self.src_start))
+        if self.src.contains(&item) {
+            Some(self.dest.start() + (item - self.src.start()))
         } else {
             None
+        }
+    }
+
+    fn map_range(&self, range: &SeedRange) -> (Option<SeedRange>, Option<SeedRange>) {
+        let (start, stop) = (range.0.start(), range.0.stop());
+        let mapped_start = self.map(start);
+        let mapped_end = self.map(stop);
+        let one = Some(start).and_then(|a| mapped_start.
+        let mapped1 = mapped_start.map_or(self.dest.start(), |a| mapped_end.map_or(self.dest.stop(), |b| a..b));
+        let mapped2 = mapped_start.and_then(|a| mapped_end.map_or(self.dest.stop(), |b| a..b));
+        let unmapped = mapped.map_or(self.|r| r.stop()+1)
+        match (self.src.contains(start), self.src.contains(stop)) {
+            (true, true) => (Some(SeedRange(self.map(start)..self.map(stop))), None),
+            (true, false) => (Some(SeedRange(self.map(start)..self.src.stop())), Some(SeedRange(self.src.stop()..stop))),
+            (false, true) => (Some(SeedRange(self.dest.start()..self.map(stop))), Some(SeedRange(start..self.dest.start()))),
+            (false, false) => (None, Some(SeedRange(start..stop))),
         }
     }
 }
@@ -41,7 +57,13 @@ impl Map {
     fn map(&self, item: usize) -> usize {
         self.ranges.iter().find_map(|r| r.map(item)).unwrap_or(item)
     }
+
+    fn map_range(&self, range: &SeedRange) -> Vec<SeedRange> {
+        let 
+    }
 }
+
+struct SeedRange(Range<usize>)
 
 struct Almanac {
     seeds: Vec<usize>,
