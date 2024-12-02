@@ -46,6 +46,7 @@ fn part1(input_str: &str) -> u32 {
         .lines()
         .into_iter()
         .map(Card::from_str)
+        .inspect(|x| println!("{}", x.num_matches()))
         .map(|c| c.score())
         .sum()
 }

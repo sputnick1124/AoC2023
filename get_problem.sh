@@ -1,6 +1,8 @@
 #!/bin/bash
-SOURCE_DIR=$(dirname "${BASH_SOURCE[0]}")
-source ${SOURCE_DIR}/cookie.sh
+if [[ "$(whoami)" =~ "M" ]]; then
+    PASSDIR="personal/"
+fi
+COOKIE="$(pass ${PASSDIR}nick/aoc/cookie)"
 
 DAY=$1
 YEAR=${2:-2023}
