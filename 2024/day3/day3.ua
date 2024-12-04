@@ -1,10 +1,11 @@
-I ← &fras "input.txt"
+JoinLines ← /◇⊂⊜□⊸≠@\n
+I         ← JoinLines &fras "input.txt"
 
-PreParse ← ♭↙₁⍉regex"don't\\(\\).+?(do\\(\\)|$)"
-Parse    ← ⋕↘₁⍉regex"mul\\((\\d+),(\\d+)\\)"
+Parse          ← ⋕↘₁⍉regex"mul\\((\\d+),(\\d+)\\)"
+RemoveDisabled ← ▽=0/↥≡◇⦷⊸⊙¤≡⊢⊸regex"don't\\(\\).+?(do\\(\\)|$)"
 
 PartI  ← /+/×Parse
-PartII ← PartI▽=0⊙°¤/↥⊸≡(⦷°□)⊙¤PreParse.
+PartII ← PartI RemoveDisabled
 
 PartI I
 PartII I
