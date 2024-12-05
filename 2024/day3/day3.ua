@@ -1,5 +1,5 @@
 JoinLines ← /◇⊂⊜□⊸≠@\n
-I         ← JoinLines &fras "input.txt"
+I         ← JoinLines&fras "input.txt"
 
 Parse          ← ⋕↘₁⍉regex"mul\\((\\d+),(\\d+)\\)"
 RemoveDisabled ← ▽=0/↥≡◇⦷⊸⊙¤≡⊢⊸regex"don't\\(\\).+?(do\\(\\)|$)"
