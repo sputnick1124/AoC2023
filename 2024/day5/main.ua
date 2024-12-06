@@ -1,13 +1,19 @@
 # Experimental!
-RawInput    ← &fras "input.txt"
 SplitBlocks ← (
   ⊜(□⊜□⊸≠@\n)¬⦷"\n\n".
   ⍜↙₁(⍚≡◇⊜⋕(⊸≠@|))
   ⍜↘₁(⍚≡⍚⊜(□⋕)(⊸≠@,))
 )
 
+RawInput      ← &fras "input.txt"
 I             ← SplitBlocks RawInput
 DeBoxSections ← ⊃(°□⊢)(°(¤□)↘1)
+FixStep ← (
+  ⊃(⧈∘2|⋅(¤⍉)|∘|⋅∘)
+  ≡(>0/+=▽=⊃(∘|⋅⋅⊙∘|⋅∘)∩°⊟)
+  ⨬(⍜⊏⇌[⟜+₁⊗0]|⊡÷2-1⊸⧻◌)⊸/↧
+)
+FixSection ← ⊙◌⍢FixStep(≠₁⧻)
 
 PartI ← (
   DeBoxSections
@@ -20,11 +26,22 @@ PartI ← (
     ⨬0(⊡÷2-1⊸⧻)
   )
 )
-PartII ← ∘
+PartII ← (
+  DeBoxSections
+  ⊃(⋅∘|¤|∘)
+  ≡(⊃(⧈∘2|⋅(¤⍉)|∘)◇≡°□
+    ⊸≡(>0/+=▽=⊃(∘|⋅⋅⊙∘|⋅∘)∩°⊟)
+    ⊃(∘|⋅⋅∘|⍉⋅°¤)
+    =1/↧
+    ⨬⊸FixSection⋅0
+    ⊙◌
+  )
+  /+⊙◌
+)
 
 PartI I
-# PartII I
-# Updates
+PartII I
+
 ┌─╴test
   $ 47|53
   $ 97|13
@@ -57,7 +74,7 @@ PartI I
   RawInput  ←
   TestInput ← SplitBlocks RawInput
   
-  ⍤. =143 PartI TestInput
+  ⍤⤙≍ 143 PartI TestInput
 
-  # ⍤. =0 PartII TestInput
+  ⍤⤙≍ 123 PartII TestInput
 └─╴
